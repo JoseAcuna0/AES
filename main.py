@@ -1,10 +1,3 @@
-"""Interfaz gráfica (GUI) para cifrar y descifrar con AES-128.
-
-Este módulo solo se encarga de la presentación: recoge los datos que
-introduce el usuario, llama a las funciones criptográficas definidas en
-``aes.py`` y muestra el resultado. No contiene lógica de AES.
-"""
-
 from __future__ import annotations
 
 import binascii
@@ -40,9 +33,7 @@ class AESApp(ctk.CTk):
         self._build_actions_section()
         self._build_output_section()
 
-    # ------------------------------------------------------------------
     # Construcción de la interfaz
-    # ------------------------------------------------------------------
 
     def _build_key_section(self) -> None:
         frame = ctk.CTkFrame(self)
@@ -151,9 +142,7 @@ class AESApp(ctk.CTk):
         self.status_label = ctk.CTkLabel(frame, text="", text_color="gray70")
         self.status_label.grid(row=2, column=0, padx=12, pady=(0, 10), sticky="w")
 
-    # ------------------------------------------------------------------
     # Manejadores de eventos
-    # ------------------------------------------------------------------
 
     def _on_mode_change(self, mode: str) -> None:
         is_cbc = mode == MODE_CBC
@@ -215,9 +204,7 @@ class AESApp(ctk.CTk):
         except Exception as exc:  # noqa: BLE001 - se muestra al usuario
             self._show_error(exc)
 
-    # ------------------------------------------------------------------
     # Lectura y validación de entradas
-    # ------------------------------------------------------------------
 
     def _read_key(self) -> bytes:
         key_hex = self.key_entry.get().strip()
@@ -255,9 +242,7 @@ class AESApp(ctk.CTk):
             )
         return data
 
-    # ------------------------------------------------------------------
     # Utilidades de presentación
-    # ------------------------------------------------------------------
 
     def _show_output(self, text: str) -> None:
         self.output_textbox.delete("1.0", "end")

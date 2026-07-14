@@ -1,21 +1,9 @@
-"""Implementación educativa del algoritmo AES-128.
-
-Este módulo contiene únicamente la lógica criptográfica de AES,
-separada por etapas (SubBytes, ShiftRows, MixColumns, AddRoundKey y
-expansión de clave), además de los modos de operación ECB y CBC con
-relleno PKCS#7.
-
-No depende de ninguna librería de interfaz gráfica: toda la lógica de
-presentación vive en ``main.py``.
-"""
-
 from __future__ import annotations
 
 import os
 
-# ---------------------------------------------------------------------------
+
 # Tablas constantes de AES
-# ---------------------------------------------------------------------------
 
 S_BOX = (
     0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B,
@@ -54,9 +42,8 @@ NK = 4  # palabras de la clave (4 -> AES-128)
 NR = 10  # número de rondas (10 -> AES-128)
 
 
-# ---------------------------------------------------------------------------
+
 # Aritmética en GF(2^8)
-# ---------------------------------------------------------------------------
 
 def _xtime(a: int) -> int:
     """Multiplica ``a`` por 2 dentro del campo GF(2^8)."""
@@ -77,9 +64,9 @@ def _gmul(a: int, b: int) -> int:
     return result & 0xFF
 
 
-# ---------------------------------------------------------------------------
+
 # Etapa: expansión de clave (Key Schedule)
-# ---------------------------------------------------------------------------
+
 
 def key_expansion(key: bytes) -> list[list[int]]:
     """Expande una clave de 16 bytes en ``NR + 1`` claves de ronda.
@@ -112,9 +99,9 @@ def _round_key_matrix(words: list[list[int]], round_number: int) -> list[list[in
     return [[columns[c][r] for c in range(NB)] for r in range(4)]
 
 
-# ---------------------------------------------------------------------------
+
 # Etapas sobre el "estado" (matriz 4x4 de bytes)
-# ---------------------------------------------------------------------------
+
 
 def bytes_to_state(block: bytes) -> list[list[int]]:
     """Convierte 16 bytes en la matriz de estado 4x4 (orden por columnas)."""
@@ -196,9 +183,8 @@ def inv_mix_columns(state: list[list[int]]) -> list[list[int]]:
     return new_state
 
 
-# ---------------------------------------------------------------------------
+
 # Cifrado / descifrado de un bloque de 16 bytes
-# ---------------------------------------------------------------------------
 
 def encrypt_block(block: bytes, round_keys: list[list[list[int]]]) -> bytes:
     """Cifra un único bloque de 16 bytes aplicando las 10 rondas de AES-128."""
@@ -244,9 +230,8 @@ def _build_round_keys(key: bytes) -> list[list[list[int]]]:
     return [_round_key_matrix(words, i) for i in range(NR + 1)]
 
 
-# ---------------------------------------------------------------------------
+
 # Relleno PKCS#7
-# ---------------------------------------------------------------------------
 
 def pkcs7_pad(data: bytes) -> bytes:
     """Añade relleno PKCS#7 hasta completar un múltiplo de 16 bytes."""
@@ -264,9 +249,8 @@ def pkcs7_unpad(data: bytes) -> bytes:
     return data[:-pad_len]
 
 
-# ---------------------------------------------------------------------------
 # Modos de operación: ECB y CBC
-# ---------------------------------------------------------------------------
+
 
 def encrypt_ecb(data: bytes, key: bytes) -> bytes:
     """Cifra ``data`` en modo ECB con relleno PKCS#7."""
